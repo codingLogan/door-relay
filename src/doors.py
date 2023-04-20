@@ -1,5 +1,5 @@
 class Doors:
-  def __init__(relay):
+  def __init__(self, relay):
     self.relay = relay
 
   # Returns a list of boolean
