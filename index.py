@@ -1,22 +1,28 @@
+# https://github.com/vicyap/sainsmart
 from sainsmart import devices
 
-relay = devices.EthernetRelay()
+def get_relay(devices):
+  return devices.EthernetRelay()
 
-# Access the state of the relays
-# relay.state() is a list of bools
-relay_state = relay.state()
+# Returns a list of boolean
+def get_door_state(relay):
+  return relay.state()
 
-# Turn on the relay at index 0.
-relay.turn_on(0)
+# Locks unlock when voltage is received
+def unlock_door(relay, index):
+  relay.turn_on(index)
 
-# Turn off the relay at index 0.
-relay.turn_off(0)
+# Locks lock when voltage is absent
+def lock_door(relay, index):
+  relay.turn_off(index)
 
-# Toggle the state of relay 0.
-relay.toggle(0)
+def toggle(relay, index):
+  relay.toggle(index)
 
-# Turn on all relays.
-relay.all_on()
+def unlock_all(relay):
+  relay.all_on()
 
-# Turn off all relays.
-relay.all_off()
+def lock_all(relay):
+  relay.all_off()
+
+get_relay(devices)
