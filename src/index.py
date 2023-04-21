@@ -1,28 +1,53 @@
+import sys
+
 # https://github.com/vicyap/sainsmart
 from sainsmart import devices
+from mock_relay import MockRelay
+from doors import Doors
 
-def get_relay(devices):
-  return devices.EthernetRelay()
+# Example command
+# python src/index.py {lock|unlock} {door-number}
+# python src/index.py {lock-all|unlock-all}
 
-# Returns a list of boolean
-def get_door_state(relay):
-  return relay.state()
 
-# Locks unlock when voltage is received
-def unlock_door(relay, index):
-  relay.turn_on(index)
+# GET ARGUMENTS
+arg_count = len(sys.argv)
+command = ""
+door = ""
 
-# Locks lock when voltage is absent
-def lock_door(relay, index):
-  relay.turn_off(index)
+if arg_count > 1 :
+  command = sys.argv[1]
 
-def toggle(relay, index):
-  relay.toggle(index)
+if arg_count > 2 :
+  # Treat the arg as an integer
+  door = int(sys.argv[2])
 
-def unlock_all(relay):
-  relay.all_on()
+print("command:", command)
+print("door:", door)
 
-def lock_all(relay):
-  relay.all_off()
 
-get_relay(devices)
+# BEGIN SCRIPT
+mode = "test"
+relay = ""
+
+if mode == "test":
+  # Default the test mode to a 16 channel relay
+  relay = MockRelay(16)
+else:
+  # Get the real device, could be any amount of channels
+  relay = devices.EthernetRelay()
+
+doors = Doors(relay)
+
+if command == "lock" :
+  doors.lock_door(door)
+elif command == "unlock" :
+  doors.unlock_door(door)
+elif command == "lock-all" :
+  doors.lock_all()
+elif command == "unlock-all" :
+  doors.unlock_all()
+else :
+  print("no valid command")
+
+print("Channel states:", doors.get_door_state())
