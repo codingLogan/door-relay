@@ -6,14 +6,15 @@ from mock_relay import MockRelay
 from doors import Doors
 
 # Example command
-# python src/index.py {lock|unlock} {door-number}
-# python src/index.py {lock-all|unlock-all}
+# python src/index.py {lock|unlock} {door-number} [mode]
+# python src/index.py {lock-all|unlock-all} [unused] [mode]
 
 
 # GET ARGUMENTS
 arg_count = len(sys.argv)
 command = ""
 door = ""
+mode = ""
 
 if arg_count > 1 :
   command = sys.argv[1]
@@ -22,13 +23,15 @@ if arg_count > 2 :
   # Treat the arg as an integer
   door = int(sys.argv[2])
 
+if arg_count > 3 :
+  mode = sys.argv[3]
+
 print("command:", command)
 print("door:", door)
 
 
 # BEGIN SCRIPT
-mode = "test"
-relay = ""
+relay = None
 
 if mode == "test":
   # Default the test mode to a 16 channel relay
