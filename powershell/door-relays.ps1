@@ -73,10 +73,17 @@ if ( $command -eq "lock" ) {
   $hexCommand = $allOn
 }
 
-Write-Host $hexCommand
+# Use to get available COMS
+[System.IO.Ports.SerialPort]::getportnames()
 
 # Use your COM port here
 $port = new-Object System.IO.Ports.SerialPort $comName,9600,None,8,one
 $port.Open()
 $port.Write($hexCommand, 0, $hexCommand.Count)
+
+# Give the signal a chance before exiting
+Start-Sleep -Seconds 1.0
+
+Write-Host "Finished sending command"
+
 $port.Close()
